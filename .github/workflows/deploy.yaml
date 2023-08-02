@@ -59,7 +59,7 @@ jobs:
         working-directory: terraform/deployment/${{ env.COMPONENT }}
         run: |
           terraform init -reconfigure \
-            -backend-config="backend.config" \
+            -backend-config=../../settings/$ENVIRONMENT/backend.config \
             -backend-config="key=$NICKNAME/$ENVIRONMENT/$AWS_REGION/$COMPONENT.tfstate" \
             -no-color
           
