@@ -100,8 +100,9 @@ jobs:
       # Create string output of Terraform Plan
       - name: Create String Output
         id: tf-plan-string
+        working-directory: terraform/deployment/${{ env.COMPONENT }}
         run: |
-          TERRAFORM_PLAN=$(terraform show -no-color tfplan)
+          TERRAFORM_PLAN=$(terraform show -no-color ${{ env.COMPONENT }}.tfplan)
 
           delimiter="$(openssl rand -hex 8)"
           echo "summary<<${delimiter}" >> $GITHUB_OUTPUT
@@ -174,6 +175,7 @@ jobs:
 
       # Terraform Apply
       - name: Terraform Apply
+        working-directory: terraform/deployment/${{ env.COMPONENT }}
         run: |
           terraform apply \
             -var-file ../../settings/$ENVIRONMENT/variables.tfvars \
