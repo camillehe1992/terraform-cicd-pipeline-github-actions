@@ -95,7 +95,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.COMPONENT }}.tfplan
-          path: terraform/deployment/${{ env.COMPONENT }}
+          path: terraform/deployment/${{ env.COMPONENT }}/${{ env.COMPONENT }}.tfplan
 
       # Create string output of Terraform Plan
       - name: Create String Output
@@ -170,7 +170,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ env.COMPONENT }}.tfplan
-          path: terraform/deployment/${{ env.COMPONENT }}
+          path: terraform/deployment/${{ env.COMPONENT }}/${{ env.COMPONENT }}.tfplan
 
       # Terraform Apply
       - name: Terraform Apply
