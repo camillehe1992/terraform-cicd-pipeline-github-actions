@@ -2,7 +2,7 @@
 # GENERAL INFORMATION
 ##############################################
 
-aws_profile = "756143471679_UserFull"
+aws_profile = "default"
 aws_region  = "cn-north-1"
 
 tags = {
