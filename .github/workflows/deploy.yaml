@@ -75,7 +75,11 @@ jobs:
         working-directory: terraform/deployment/${{ env.COMPONENT }}
         run: |
           export exitcode=0
-          terraform plan -detailed-exitcode -no-color -out ${{ env.COMPONENT }}.tfplan || export exitcode=$?
+          terraform plan \
+            -var-file ../../settings/$ENVIRONMENT/variables.tfvars \
+            -detailed-exitcode \
+            -no-color \
+            -out ${{ env.COMPONENT }}.tfplan || export exitcode=$?
 
           echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
 
@@ -153,7 +157,13 @@ jobs:
 
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
-        run: terraform init
+        id: tf-init
+        working-directory: terraform/deployment/${{ env.COMPONENT }}
+        run: |
+          terraform init -reconfigure \
+            -backend-config=../../settings/$ENVIRONMENT/backend.config \
+            -backend-config="key=$NICKNAME/$ENVIRONMENT/$AWS_REGION/$COMPONENT.tfstate" \
+            -no-color
 
       # Download saved plan from artifacts
       - name: Download Terraform Plan
@@ -163,4 +173,7 @@ jobs:
 
       # Terraform Apply
       - name: Terraform Apply
-        run: terraform apply -auto-approve ${{ env.COMPONENT }}.tfplan
+        run: |
+          terraform apply \
+            -var-file ../../settings/$ENVIRONMENT/variables.tfvars \
+            -auto-approve ${{ env.COMPONENT }}.tfplan
